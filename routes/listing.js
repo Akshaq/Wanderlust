@@ -3,7 +3,7 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
-const {isLoggedIn, isOwner, validateListing} = require("../middleware.js");
+const {isLoggedIn, isOwner, validateListing, isReviewAuthor} = require("../middleware.js");
 
 
 //Index Route
@@ -22,8 +22,12 @@ router.get("/new", isLoggedIn, ( req, res) => {
 router.get("/:id",wrapAsync(async (req ,res) =>{
     let {id} = req.params;
     const listing =await Listing.findById(id)
-        .populate("reviews")
-        .populate("owner");
+        .populate({
+            path: "reviews",
+           populate: {
+            path: "author",
+           }, 
+        })
     if(!listing) {
         req.flash("error","Listing you requested for does not exists!");
         return res.redirect("/listings");
@@ -88,7 +92,7 @@ router.put(
 router.delete(
     "/:id",
     isLoggedIn,
-    isOwner, 
+    isReviewAuthor, 
     wrapAsync (async (req, res) =>{
     let{id} = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
