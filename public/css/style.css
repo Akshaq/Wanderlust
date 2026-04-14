@@ -115,3 +115,10 @@
     padding-left: 0;
     padding-right: 0;
 }
+
+.preview-img {
+  width: 250px !important;
+  height: 200px !important;
+  object-fit: cover;
+  border-radius: 10px !important;
+}

@@ -6,11 +6,17 @@ const mongoose = require("mongoose");
 const {isLoggedIn, isOwner, validateListing, isReviewAuthor} = require("../middleware.js");
 
 const listingController = require("../controllers/listings.js");
+const bookingController = require("../controllers/booking.js");
+const multer = require("multer");
+const{storage} = require("../cloudConfig.js");
+const upload = multer({storage});
 
 router
     .route("/")
     .get(wrapAsync(listingController.index))
-    .post(isLoggedIn,
+    .post(
+        isLoggedIn,
+        upload.single("listing[image]"),
         validateListing,
         wrapAsync(listingController.createListing)
     );
@@ -18,13 +24,13 @@ router
 //New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm );
 
-
 router
     .route("/:id")
     .get(wrapAsync(listingController.showlisting))
     .put(
         isLoggedIn,
         isOwner,
+        upload.single("listing[image]"),
         validateListing,
         wrapAsync (listingController.updateListing)
     )
@@ -42,5 +48,7 @@ router.get(
     isOwner,
     wrapAsync(listingController.renderEditForm)
 );
+
+router.post("/:id/bookings", isLoggedIn, wrapAsync(bookingController.createBooking));
 
 module.exports = router;

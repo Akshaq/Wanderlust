@@ -32,6 +32,59 @@
   </div> 
   <% } %>
  
+  <!-- BOOKING CARD -->
+  <div class="col-6 offset-3 mb-4">
+    <div class="card border shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title fw-bold">
+          &#8377;<%= listing.price.toLocaleString("en-IN") %>
+          <span class="fw-normal fs-6 text-muted">/ night</span>
+        </h5>
+        <hr>
+        <% if (!currUser) { %>
+          <p class="text-muted">
+            <a href="/login" class="text-dark fw-bold">Log in</a> to book this listing.
+          </p>
+        <% } else if (listing.owner._id.equals(currUser._id)) { %>
+          <p class="text-muted fst-italic">You own this listing and cannot book it.</p>
+        <% } else { %>
+          <form action="/listings/<%= listing._id %>/bookings" method="POST" class="needs-validation" novalidate>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label for="checkIn" class="form-label fw-semibold">Check-in</label>
+                <input type="date" id="checkIn" name="booking[checkIn]" class="form-control" required
+                  min="<%= new Date().toISOString().split('T')[0] %>"/>
+                <div class="invalid-feedback">Select a check-in date.</div>
+              </div>
+              <div class="col-6">
+                <label for="checkOut" class="form-label fw-semibold">Check-out</label>
+                <input type="date" id="checkOut" name="booking[checkOut]" class="form-control" required
+                  min="<%= new Date(Date.now() + 86400000).toISOString().split('T')[0] %>"/>
+                <div class="invalid-feedback">Select a check-out date.</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="guests" class="form-label fw-semibold">Guests</label>
+              <select name="booking[guests]" id="guests" class="form-select" required>
+                <% for(let i = 1; i <= 16; i++) { %>
+                  <option value="<%= i %>"><%= i %> guest<%= i > 1 ? 's' : '' %></option>
+                <% } %>
+              </select>
+            </div>
+            <div id="pricePreview" class="d-none alert alert-light border mb-3 p-2">
+              <div class="d-flex justify-content-between">
+                <span id="nightsLabel">0 nights</span>
+                <span id="totalLabel" class="fw-bold">&#8377;0</span>
+              </div>
+              <small class="text-muted">&#8377;<%= listing.price.toLocaleString("en-IN") %> &times; <span id="nightsCount">0</span> night(s)</small>
+            </div>
+            <button class="btn btn-dark w-100 fw-bold">Reserve</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <!-- END BOOKING CARD -->
   
   <div class="col-8 offset-3 mb-3">
     <hr>
@@ -44,7 +97,19 @@
       >
       <div class="mb-3 mt-3">
         <label for="rating" class="form-lable">Rating</label>
-        <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+        <fieldset class="starability-slot">
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
       </div>
       <div class="mb-3 mt-3">
         <label for="comment" class="form-lable">Comments</label>
@@ -68,8 +133,8 @@
       <div class="card col-5 ms-3 mb-3">
         <div class="card-body">
           <h5 class="card-title">@<%= review.author.username %></h5>
+          <p class="starability-result  card-text" data-rating="<%= review.rating %>"></p>
           <p class="card-text"><%= review.comment %></p>
-          <p class="card-text"><%= review.rating %> stars</p>
           <form
             class="mb-3"
             method="post"
@@ -82,4 +147,34 @@
     <% } %>
     </div>
   </div> 
+  <script>
+    const pricePerNight = <%= listing.price %>;
+    const checkInInput = document.getElementById("checkIn");
+    const checkOutInput = document.getElementById("checkOut");
+    const pricePreview = document.getElementById("pricePreview");
+    const nightsLabel = document.getElementById("nightsLabel");
+    const totalLabel = document.getElementById("totalLabel");
+    const nightsCount = document.getElementById("nightsCount");
+
+    function updatePreview() {
+      const checkIn = new Date(checkInInput.value);
+      const checkOut = new Date(checkOutInput.value);
+      if (checkInInput.value && checkOutInput.value && checkOut > checkIn) {
+        const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        const total = nights * pricePerNight;
+        nightsLabel.textContent = nights + " night" + (nights > 1 ? "s" : "");
+        nightsCount.textContent = nights;
+        totalLabel.textContent = "\u20B9" + total.toLocaleString("en-IN");
+        pricePreview.classList.remove("d-none");
+        checkOutInput.min = new Date(checkIn.getTime() + 86400000).toISOString().split("T")[0];
+      } else {
+        pricePreview.classList.add("d-none");
+      }
+    }
+
+    if (checkInInput && checkOutInput) {
+      checkInInput.addEventListener("change", updatePreview);
+      checkOutInput.addEventListener("change", updatePreview);
+    }
+</script>
 </div>
