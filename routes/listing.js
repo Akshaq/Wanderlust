@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const {isLoggedIn, isOwner, validateListing, isReviewAuthor} = require("../middleware.js");
 
 const listingController = require("../controllers/listings.js");
-const bookingController = require("../controllers/booking.js");
+const bookingController = require("../controllers/bookings.js");
 const multer = require("multer");
 const{storage} = require("../cloudConfig.js");
 const upload = multer({storage});

@@ -63,7 +63,7 @@ module.exports.createBooking = async (req, res) => {
 
   await booking.save();
 
-  req.flash("success", `Booking confirmed! ${nights} night(s) for ₹${totalPrice.toLocaleString("en-IN")}`);
+req.flash("success", `Reservation confirmed! ${nights} night(s) • ₹${totalPrice.toLocaleString("en-IN")}`);
   res.redirect(`/bookings/${booking._id}`);
 };
 
