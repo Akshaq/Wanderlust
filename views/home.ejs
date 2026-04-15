@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wanderlust — Find Your Perfect Stay</title>
+  <link rel="stylesheet" href="/css/home.css" />
+</head>
+<body>
+
+<section class="hero">
+  <!-- Background -->
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+
+  <!-- Navbar -->
+  <nav class="hero-nav">
+    <a href="/" class="brand">Wanderlust</a>
+    <div class="nav-links">
+      <% if (locals.currUser) { %>
+        <a href="/listings">Listings</a>
+        <a href="/bookings">My Bookings</a>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/signup" class="btn-signup">Sign Up</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <h1>Find Your <span>Perfect</span> Stay</h1>
+    <p class="hero-tagline">Discover amazing places around the world</p>
+    <a href="/listings" class="btn-explore">Explore Now</a>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="mouse"></div>
+    <span>Scroll</span>
+  </div>
+
+</section>
+
+</body>
+</html>
