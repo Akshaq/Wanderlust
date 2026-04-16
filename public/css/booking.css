@@ -1,0 +1,170 @@
+/* ===== BOOKING FORM (listings/show.ejs) ===== */
+.booking-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  border: none;
+  padding: 8px;
+}
+
+.booking-card .card-body {
+  padding: 24px;
+}
+
+.booking-card h5 {
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.booking-card input[type="date"],
+.booking-card select {
+  border-radius: 10px;
+  border: 1.5px solid #ddd;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  transition: border 0.2s;
+}
+
+.booking-card input[type="date"]:focus,
+.booking-card select:focus {
+  border-color: #222;
+  box-shadow: none;
+}
+
+.booking-card label {
+  font-size: 0.85rem;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.booking-card .btn-reserve {
+  background-color: #ff385c !important;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: background 0.2s;
+  color: #fff !important;
+}
+
+.booking-card .btn-reserve:hover {
+  background-color: #fe424d;
+  color: black !important;
+}
+
+.price-preview {
+  background: #f7f7f7;
+  border-radius: 10px;
+  border: 1px solid #eee !important;
+  padding: 12px 16px !important;
+}
+
+.price-preview #totalLabel {
+  font-size: 1.1rem;
+}
+
+/* ===== MY BOOKINGS PAGE (bookings/index.ejs) ===== */
+.my-bookings-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  border-bottom: 1px solid #3f3f3f;
+  padding-bottom: 10px;
+  margin-bottom: 28px;
+}
+
+.booking-list-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.booking-list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+}
+
+.booking-list-card img {
+  height: 100%;
+  min-height: 140px;
+  object-fit: cover;
+}
+
+.booking-list-card .card-body {
+  padding: 16px;
+}
+
+.booking-list-card .badge {
+  font-size: 0.72rem;
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+
+.empty-bookings {
+  padding: 80px 0;
+  color: #aaa;
+}
+
+.empty-bookings i {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+/* ===== BOOKING CONFIRMATION (bookings/show.ejs) ===== */
+.booking-confirm-card {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+  overflow: hidden;
+}
+
+.booking-confirm-card .card-header {
+  background: linear-gradient(135deg, #1a7a4a, #25a360);
+  padding: 20px 28px;
+  border: none;
+}
+
+.booking-confirm-card .card-header h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.booking-confirm-card img {
+  border-radius: 12px;
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.booking-detail-box {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.booking-detail-box small {
+  font-size: 0.75rem;
+  color: #888;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.booking-detail-box strong {
+  font-size: 1rem;
+  color: #222;
+}
+
+.booking-total {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.booking-status-badge {
+  font-size: 0.85rem;
+  border-radius: 20px;
+  padding: 6px 14px;
+}

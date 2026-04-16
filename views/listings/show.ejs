@@ -4,37 +4,33 @@
     <h3><%= listing.title %></h3>
   </div>
   <div class="card col-6 offset-3 show-card listing-card">
-     <img
-        src="<%= listing.image.url %>"
-        class="card-img-top show-img"
-        alt="listing_image"
-      />
-      <div class="card-body">
-        <p class="card-text">Owned by:<i><%= listing.owner.username %></i></p>
-
-        <p class="card-text"> <%= listing.description %> </p> 
-        <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-IN") %> </p>
-        <p class="card-text"> <%= listing.location %> </p>
-        <p class="card-text"> <%= listing.country %> </p>
-      </div>
+    <img
+      src="<%= listing.image.url %>"
+      class="card-img-top show-img"
+      alt="listing_image"
+    />
+    <div class="card-body">
+      <p class="card-text">Owned by:<i><%= listing.owner.username %></i></p>
+      <p class="card-text"> <%= listing.description %> </p>
+      <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
+      <p class="card-text"> <%= listing.location %> </p>
+      <p class="card-text"> <%= listing.country %> </p>
     </div>
-    <br>
+  </div>
+  <br>
+
   <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
   <div class="btns mb-3">
-    <a
-       href="/listings/<%= listing._id %>/edit"
-       class="btn btn-dark edit-btn col-1 offset-3"
-       >Edit
-    </a>
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn col-1 offset-3">Edit</a>
     <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
       <button class="btn btn-dark offset-5">Delete</button>
     </form>
-  </div> 
+  </div>
   <% } %>
- 
+
   <!-- BOOKING CARD -->
   <div class="col-6 offset-3 mb-4">
-    <div class="card border shadow-sm">
+    <div class="card border shadow-sm booking-card">
       <div class="card-body">
         <h5 class="card-title fw-bold">
           &#8377;<%= listing.price.toLocaleString("en-IN") %>
@@ -66,35 +62,31 @@
             <div class="mb-3">
               <label for="guests" class="form-label fw-semibold">Guests</label>
               <select name="booking[guests]" id="guests" class="form-select" required>
-                <% for(let i = 1; i <= 16; i++) { %>
+                <% for(let i = 1; i <= 5; i++) { %>
                   <option value="<%= i %>"><%= i %> guest<%= i > 1 ? 's' : '' %></option>
                 <% } %>
               </select>
             </div>
-            <div id="pricePreview" class="d-none alert alert-light border mb-3 p-2">
+            <div id="pricePreview" class="d-none price-preview mb-3">
               <div class="d-flex justify-content-between">
                 <span id="nightsLabel">0 nights</span>
                 <span id="totalLabel" class="fw-bold">&#8377;0</span>
               </div>
               <small class="text-muted">&#8377;<%= listing.price.toLocaleString("en-IN") %> &times; <span id="nightsCount">0</span> night(s)</small>
             </div>
-            <button class="btn btn-dark w-100 fw-bold">Reserve</button>
+            <button class="btn btn-reserve w-100">Reserve</button>
           </form>
         <% } %>
       </div>
     </div>
   </div>
   <!-- END BOOKING CARD -->
-  
+
   <div class="col-8 offset-3 mb-3">
     <hr>
     <% if(currUser) { %>
     <h4>Leave a Review</h4>
-    <form action="/listings/<%= listing.id%>/reviews"
-      method="post"
-      novalidate
-      class="needs-validation"
-      >
+    <form action="/listings/<%= listing.id%>/reviews" method="post" novalidate class="needs-validation">
       <div class="mb-3 mt-3">
         <label for="rating" class="form-lable">Rating</label>
         <fieldset class="starability-slot">
@@ -113,67 +105,60 @@
       </div>
       <div class="mb-3 mt-3">
         <label for="comment" class="form-lable">Comments</label>
-        <textarea
-          name="review[comment]"
-          id="comment"
-          cols="30"
-          rows="5"
-          class="form-control"
-          required
-        ></textarea>
+        <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
         <div class="invalid-feedback">Please add some review for comments</div>
       </div>
       <button class="btn btn-outline-dark">Submit</button>
     </form>
     <% } %>
+
     <p><b>All Reviews</b></p>
-    <div class="row ">
+    <div class="row">
     <% for(review of listing.reviews) { %>
       <div class="card col-5 ms-3 mb-3">
         <div class="card-body">
           <h5 class="card-title">@<%= review.author.username %></h5>
-          <p class="starability-result  card-text" data-rating="<%= review.rating %>"></p>
+          <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
           <p class="card-text"><%= review.comment %></p>
-          <form
-            class="mb-3"
-            method="post"
-            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-          >
+          <form class="mb-3" method="post"
+            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
             <button class="btn btn-sm btn-dark">Delete</button>
           </form>
         </div>
-      </div> 
+      </div>
     <% } %>
     </div>
-  </div> 
-  <script>
-    const pricePerNight = <%= listing.price %>;
-    const checkInInput = document.getElementById("checkIn");
-    const checkOutInput = document.getElementById("checkOut");
-    const pricePreview = document.getElementById("pricePreview");
-    const nightsLabel = document.getElementById("nightsLabel");
-    const totalLabel = document.getElementById("totalLabel");
-    const nightsCount = document.getElementById("nightsCount");
+  </div>
 
-    function updatePreview() {
-      const checkIn = new Date(checkInInput.value);
-      const checkOut = new Date(checkOutInput.value);
-      if (checkInInput.value && checkOutInput.value && checkOut > checkIn) {
-        const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
-        const total = nights * pricePerNight;
-        nightsLabel.textContent = nights + " night" + (nights > 1 ? "s" : "");
-        nightsCount.textContent = nights;
-        totalLabel.textContent = "\u20B9" + total.toLocaleString("en-IN");
-        pricePreview.classList.remove("d-none");
-        checkOutInput.min = new Date(checkIn.getTime() + 86400000).toISOString().split("T")[0];
-      } else {
-        pricePreview.classList.add("d-none");
-      }
-    }
-
-    if (checkInInput && checkOutInput) {
-      checkInInput.addEventListener("change", updatePreview);
-      checkOutInput.addEventListener("change", updatePreview);
-    }
-</script>
 </div>
+
+<script>
+  const pricePerNight = <%= listing.price %>;
+  const checkInInput = document.getElementById("checkIn");
+  const checkOutInput = document.getElementById("checkOut");
+  const pricePreview = document.getElementById("pricePreview");
+  const nightsLabel = document.getElementById("nightsLabel");
+  const totalLabel = document.getElementById("totalLabel");
+  const nightsCount = document.getElementById("nightsCount");
+
+  function updatePreview() {
+    const checkIn = new Date(checkInInput.value);
+    const checkOut = new Date(checkOutInput.value);
+    if (checkInInput.value && checkOutInput.value && checkOut > checkIn) {
+      const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+      const total = nights * pricePerNight;
+      nightsLabel.textContent = nights + " night" + (nights > 1 ? "s" : "");
+      nightsCount.textContent = nights;
+      totalLabel.textContent = "\u20B9" + total.toLocaleString("en-IN");
+      pricePreview.classList.remove("d-none");
+      checkOutInput.min = new Date(checkIn.getTime() + 86400000).toISOString().split("T")[0];
+    } else {
+      pricePreview.classList.add("d-none");
+    }
+  }
+
+  if (checkInInput && checkOutInput) {
+    checkInInput.addEventListener("change", updatePreview);
+    checkOutInput.addEventListener("change", updatePreview);
+  }
+</script>
