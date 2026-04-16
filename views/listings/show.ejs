@@ -38,9 +38,11 @@
         </h5>
         <hr>
         <% if (!currUser) { %>
-          <p class="text-muted">
-            <a href="/login" class="text-dark fw-bold">Log in</a> to book this listing.
-          </p>
+          <div class="text-center">
+            <a href="/login" class="btn btn-danger fw-bold text-white text-decoration-none">
+               LogIn to book this listing
+            </a>
+          </div>
         <% } else if (listing.owner._id.equals(currUser._id)) { %>
           <p class="text-muted fst-italic">You own this listing and cannot book it.</p>
         <% } else { %>
